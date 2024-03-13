@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { remote } from 'electron'
+const { remote } = require('@electron/remote');
 import path from 'path';
 import { isWavFile, StimConfig, WavStimulationConfig } from 'client/renderer/model/StimConfig';
 import { PULSE_COLORS } from 'client/Constants';

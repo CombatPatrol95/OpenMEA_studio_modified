@@ -84,9 +84,9 @@ app.on('activate', () => {
     // }
 });
 
-app.on('renderer-process-crashed', err => {
-    log.error(err)
-})
+// app.on('renderer-process-crashed', err => {
+//     log.error(err)
+// })
 
 app.on('render-process-gone', err => {
     log.error(err)

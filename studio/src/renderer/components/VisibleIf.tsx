@@ -2,6 +2,7 @@ import * as React from 'react'
 
 export interface HidableProps {
     condition: boolean | null
+    children?: React.ReactNode;
 } 
 
 export class VisibleIf extends React.Component<HidableProps, {}> {

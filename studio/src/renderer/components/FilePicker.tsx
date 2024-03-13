@@ -1,6 +1,6 @@
 import * as React from 'react'
 import path from 'path'
-import { remote } from 'electron'
+const { remote } = require('@electron/remote');
 
 export interface FilePickerProps {
     filePath: string | null | undefined
