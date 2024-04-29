@@ -26,6 +26,7 @@ export class AppWindow {
 
         this._window = new BrowserWindow(windowOptions);
         this._window.loadURL(this._url);
+        console.log("rendering");
     
         // Open the DevTools.
         if (this._openDevTools) {

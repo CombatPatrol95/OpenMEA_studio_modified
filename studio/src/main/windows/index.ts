@@ -26,4 +26,4 @@ const mainWindowOptions = {
     }
 } as BrowserWindowConstructorOptions
 
-export const mainWindow = new AppWindow(mainWindowUrl, mainWindowOptions, 1, false)
+export const mainWindow = new AppWindow(mainWindowUrl, mainWindowOptions, 1, true)

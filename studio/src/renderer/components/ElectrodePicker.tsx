@@ -6,7 +6,7 @@ import { themeColor } from './Colors'
 
 export interface ElectrodePickerProps {
     electrodesByPulse: number[][]
-    onElectrodeSelectionsChanged: (electrodesByPupse: number[][]) => void
+    onElectrodeSelectionsChanged: (electrodesByPulse: number[][]) => void
 }
 
 export interface ElectrodePickerState {
@@ -137,7 +137,7 @@ export class ElectrodePicker extends React.Component<ElectrodePickerProps, Elect
             </div>
             <div className="mt-2 text-center" style={{width: `${gridWidth}px`}}>
                 <a href="" className="mr-4 text-sm" onClick={this.onClickSelectAll}>Select all</a>
-                <a href="" className="text-sm"onClick={this.onClickClearAll}>Clear all</a>
+                <a href="" className="text-sm" onClick={this.onClickClearAll}>Clear all</a>
             </div>
         </div>
 
