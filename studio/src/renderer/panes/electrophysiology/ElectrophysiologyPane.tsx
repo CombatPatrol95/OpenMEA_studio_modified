@@ -52,11 +52,11 @@ export class ElectrophysiologyPane extends React.Component<ElectrophysiologyPane
                 <div className="flex-1 h-full w-1/3 flex flex-col">
                     <div>
                         <h2 className="flex-0 mt-4" style={{marginLeft: '40px'}}>
-                            PulseChart 5
+                            PulseChart {this.props.context.chartConfig.pulseThreshold}
                         </h2>
                     </div>
                     <div className="flex-auto overflow-hidden">
-                        <PulseChart context={context} electrode={selectedElectrode} threshold={5}/>
+                        <PulseChart context={context} electrode={selectedElectrode} />
                     </div>
                 </div>
             </div>

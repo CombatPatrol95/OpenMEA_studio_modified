@@ -12,6 +12,8 @@ export interface ChartConfig {
     spectrogramCalculationPeriod: number
 
     notchFilter60Hz: boolean
+
+    pulseThreshold: number
 }
 
 export enum ArrangeChannels {

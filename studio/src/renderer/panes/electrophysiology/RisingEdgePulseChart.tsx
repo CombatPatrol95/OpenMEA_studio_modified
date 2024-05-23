@@ -11,7 +11,7 @@ const R_PADDING = 20
 const BOTTOM_PADDIG = 20
 
 export interface PulseChartProps extends TimeSeriesChartProps{
-    threshold: number
+    // threshold: number
 }
 
 export interface PulseChartState {
@@ -106,6 +106,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     private _d3DataPath : d3.Selection<SVGPathElement, number[], null, undefined> | null = null
     private _line : d3.Line<number> | null = null
     private _pulseData : any[] = []
+    private _threshold : number = this.props.context.chartConfig.pulseThreshold
     // private pulseHeight = 10;
 
     private _width = 500
@@ -159,7 +160,8 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             this._subsamples = newSubsamples.slice(copyFrom)
             this._pulseData = [] as number[]
             for(const subsample in this._subsamples){
-                if(subsample >= this.props.threshold){
+                // @ts-ignore
+                if(subsample >= this._threshold){
                     this._pulseData.push(10)
                 }else {
                     this._pulseData.push(0)
@@ -174,7 +176,8 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             this._subsamples.push(...newSubsamples)
             this._pulseData.splice(0, numToRemove)
             for(const subsample in this._subsamples){
-                if(subsample >= this.props.threshold){
+                // @ts-ignore
+                if(subsample >= this._threshold){
                     this._pulseData.push(10)
                 }else {
                     this._pulseData.push(0)

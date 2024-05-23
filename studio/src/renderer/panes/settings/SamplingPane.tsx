@@ -157,6 +157,14 @@ export class SamplingPane extends React.Component<SamplingPaneProps, SamplingPan
             {this.renderHighPassOptions()}
             {this.renderCombFilterDropdown()}
             {this.renderCombFilterOptions()}
+
+            <h2 className="mt-4 mb-2">Pulse Threshold</h2>
+            <div>
+                <label className="sidebar-label">Threshold Value</label>
+                <SiNumberInput value={chartConfig.pulseThreshold}
+                               onChange={this.handlChartConfigChange("pulseThreshold")} />
+                <span className="units">V</span>
+            </div>
         </div>;
     };
 
