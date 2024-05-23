@@ -4,6 +4,7 @@ import { SpectrogramLegend } from 'client/renderer/panes/electrophysiology/Spect
 import { AllElectrodesChart } from './AllChannelCharts';
 import { SpectrogramChart } from './SpectrogramChart';
 import { TimeSeriesChart } from './TimeSeriesChart';
+import {PulseChart} from "client/renderer/panes/electrophysiology/RisingEdgePulseChart";
 
 export interface ElectrophysiologyPaneProps {
     context: AppContext
@@ -26,7 +27,7 @@ export class ElectrophysiologyPane extends React.Component<ElectrophysiologyPane
 
         return <div className="flex-1 flex flex-col overflow-hidden">
             <div className="flex-none w-full pr-2 flex flex-row" style={{height:'33%'}}>
-                <div className="flex-1 h-full w-1/2 flex flex-col">
+                <div className="flex-1 h-full w-1/3 flex flex-col">
                     <h2 className="flex-0 mt-4" style={{marginLeft: '40px'}}>
                         Electrode {deviceProps.electrodeNames[selectedElectrode]}
                     </h2>
@@ -34,7 +35,7 @@ export class ElectrophysiologyPane extends React.Component<ElectrophysiologyPane
                         <TimeSeriesChart context={context} electrode={selectedElectrode} />
                     </div>
                 </div>
-                <div className="flex-1 h-full w-1/2 flex flex-col">
+                <div className="flex-1 h-full w-1/3 flex flex-col">
                     <div className="flex-0 flex flex-row justify-between">
                         <h2 className="flex-0 mt-4 text-white">
                             .
@@ -46,6 +47,16 @@ export class ElectrophysiologyPane extends React.Component<ElectrophysiologyPane
                     
                     <div className="flex-auto overflow-hidden">
                         <SpectrogramChart context={context} electrode={selectedElectrode} />
+                    </div>
+                </div>
+                <div className="flex-1 h-full w-1/3 flex flex-col">
+                    <div>
+                        <h2 className="flex-0 mt-4" style={{marginLeft: '40px'}}>
+                            PulseChart 5
+                        </h2>
+                    </div>
+                    <div className="flex-auto overflow-hidden">
+                        <PulseChart context={context} electrode={selectedElectrode} threshold={5}/>
                     </div>
                 </div>
             </div>
