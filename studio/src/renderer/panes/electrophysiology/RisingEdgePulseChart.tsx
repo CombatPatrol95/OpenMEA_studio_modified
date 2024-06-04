@@ -81,6 +81,14 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             redrawDataOnly = true
         }
 
+        const oldThreshold = prevProps.context.chartConfig.pulseThreshold;
+        const newThreshold = this.props.context.chartConfig.pulseThreshold;
+
+        if (oldThreshold !== newThreshold) {
+            // Reset _rising when the threshold changes
+            this._rising = true;
+        }
+
         if (redrawDataOnly && this._line) {
             // d3.select(this._svgRef)?.data(this._subsamples)
             // this.redrawChart()
@@ -105,7 +113,8 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     private _svgRef : SVGElement | null = null
     private _d3DataPath : d3.Selection<SVGPathElement, number[], null, undefined> | null = null
     private _line : d3.Line<number> | null = null
-    private _pulseData : any[] = []
+    private _pulseData : number[] = []
+    private _rising : boolean = true
     private _threshold : number = this.props.context.chartConfig.pulseThreshold
     // private pulseHeight = 10;
 
@@ -113,7 +122,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     private _height = 300
 
     private _maxSubsamples: number
-    private _subsamples: number[] = []
+    // private _subsamples: number[] = []
 
     private _pipeline: Pipeline | null = null
 
@@ -157,30 +166,35 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             // The subsamples were entirely recalculated by the  engine.
             const numToCopy = Math.min(this._maxSubsamples, newSubsamples.length)
             const copyFrom = newSubsamples.length - numToCopy
-            this._subsamples = newSubsamples.slice(copyFrom)
-            this._pulseData = [] as number[]
-            for(const subsample in this._subsamples){
-                // @ts-ignore
-                if(subsample >= this._threshold){
-                    this._pulseData.push(10)
+            // this._subsamples = newSubsamples.slice(copyFrom)
+            for(let i = copyFrom; i < newSubsamples.length; i++){
+                const subsample = newSubsamples[i]
+                const index = i - copyFrom;
+                if(subsample >= this._threshold && this._rising){
+                    // this._pulseData.push(this.context.chartConfig.showMaxVolts)
+                    this._pulseData[index] = this.props.context.chartConfig.showMaxVolts //subsample;
+                    this._rising = false;
                 }else {
-                    this._pulseData.push(0)
+                    this._pulseData[index] = 0
+                    this._rising = true;
                 }
             }
         } else {
             // Incremental update.
             const numToRemove =
-                Math.max(this._subsamples.length + newSubsamples.length - this._maxSubsamples, 0)
+                Math.max(this._pulseData.length + newSubsamples.length - this._maxSubsamples, 0)
 
-            this._subsamples.splice(0, numToRemove)
-            this._subsamples.push(...newSubsamples)
+            // this._subsamples.splice(0, numToRemove)
+            // this._subsamples.push(...newSubsamples)
             this._pulseData.splice(0, numToRemove)
-            for(const subsample in this._subsamples){
-                // @ts-ignore
-                if(subsample >= this._threshold){
-                    this._pulseData.push(10)
+            for(let i = 0; i < newSubsamples.length; i++){
+                const subsample = newSubsamples[i]
+                if(subsample >= this._threshold && this._rising){
+                    this._pulseData.push(this.props.context.chartConfig.showMaxVolts)  //subsample
+                    this._rising = false
                 }else {
                     this._pulseData.push(0)
+                    this._rising = true;
                 }
             }
 
@@ -373,7 +387,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             .attr('class', 'line data')
             .style('stroke', 'blue')
             .style('fill', 'none')
-            .datum(this._subsamples)
+            .datum(this._pulseData)
 
 
         // this._d3DataPath = svg.append('g')
@@ -414,7 +428,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     }
 
     private resetData = () => {
-        this._subsamples = new Array(this._maxSubsamples).fill(0)
+        this._pulseData = new Array(this._maxSubsamples).fill(0)
     }
 
     // private redrawPulseData = () => {

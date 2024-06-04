@@ -83,7 +83,9 @@ export class AppService extends React.Component<AppServiceProps, AppServiceState
                 spectrogramCalculationPeriod: 0.1,
                 spectrogramMaxFreq: 300,
 
-                notchFilter60Hz: false
+                notchFilter60Hz: false,
+
+                pulseThreshold: 0.00001
             } as ChartConfig,
 
             acDcMixConfig: {
