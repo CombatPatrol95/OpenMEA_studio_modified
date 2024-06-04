@@ -176,7 +176,9 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
                     this._rising = false;
                 }else {
                     this._pulseData[index] = 0
-                    this._rising = true;
+                    if(subsample < this._threshold){
+                        this._rising = true;
+                    }
                 }
             }
         } else {
@@ -194,7 +196,9 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
                     this._rising = false
                 }else {
                     this._pulseData.push(0)
-                    this._rising = true;
+                    if(subsample < this._threshold){
+                        this._rising = true;
+                    }
                 }
             }
 

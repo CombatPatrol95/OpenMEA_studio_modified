@@ -85,7 +85,7 @@ export class AppService extends React.Component<AppServiceProps, AppServiceState
 
                 notchFilter60Hz: false,
 
-                pulseThreshold: 0.00001
+                pulseThreshold: 0.0001
             } as ChartConfig,
 
             acDcMixConfig: {
