@@ -81,8 +81,8 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             redrawDataOnly = true
         }
 
-        const oldThreshold = prevProps.context.chartConfig.pulseThreshold;
-        const newThreshold = this.props.context.chartConfig.pulseThreshold;
+        const oldThreshold = oldContext.chartConfig.pulseThreshold;
+        const newThreshold = newContext.chartConfig.pulseThreshold;
 
         if (oldThreshold !== newThreshold) {
             // Reset _rising when the threshold changes
@@ -162,10 +162,14 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     }
 
     private onNewSubsamples = (newSubsamples: number[]) => {
+        console.log("newSubsamples" + newSubsamples)
+        console.log("_pulseData" + this._pulseData)
         if (newSubsamples.length >= this._maxSubsamples) {
             // The subsamples were entirely recalculated by the  engine.
             const numToCopy = Math.min(this._maxSubsamples, newSubsamples.length)
             const copyFrom = newSubsamples.length - numToCopy
+            // Fill _pulseData with zeros
+            this._pulseData = new Array(this._maxSubsamples).fill(0, 0, this._maxSubsamples);
             // this._subsamples = newSubsamples.slice(copyFrom)
             for(let i = copyFrom; i < newSubsamples.length; i++){
                 const subsample = newSubsamples[i]
@@ -175,7 +179,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
                     this._pulseData[index] = this.props.context.chartConfig.showMaxVolts //subsample;
                     this._rising = false;
                 }else {
-                    this._pulseData[index] = 0
+                    //this._pulseData[index] = 0
                     if(subsample < this._threshold){
                         this._rising = true;
                     }
@@ -204,7 +208,8 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
 
         }
 
-
+        console.log("newSubsamples" + newSubsamples)
+        console.log("_pulseData" + this._pulseData)
         // Redraw the chart
         if (this._line) {
             this._d3DataPath?.datum(this._pulseData).attr('d', this._line)

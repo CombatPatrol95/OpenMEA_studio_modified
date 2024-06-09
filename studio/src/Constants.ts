@@ -30,7 +30,7 @@ export const OPENMEA_ELECTRODE_EXISTS = [
     true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true,
 ]
 
-export const OPENMEA_ELECTRODE_NAMES: (string)[] = new Array(NUM_OPENMEA_ELECTRODES).fill(null)
+export const OPENMEA_ELECTRODE_NAMES: (string|null)[] = new Array(NUM_OPENMEA_ELECTRODES).fill(null)
 
 for (let i = 0; i < OPENMEA_ELECTRODE_MAP.length; i++) {
     const columns = Math.ceil(Math.sqrt(NUM_OPENMEA_ELECTRODES))

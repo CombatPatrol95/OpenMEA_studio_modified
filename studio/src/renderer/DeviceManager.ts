@@ -12,7 +12,7 @@ export class DeviceManager {
     deviceState: DeviceState = new DeviceState()
 
     constructor(engineClient: EngineClient) {
-        this.deviceProps = new DeviceProperties() //AVAILABLE_DEVICE_PROPERTIES[DEVICE_NWB_FILE]
+        this.deviceProps = null // new DeviceProperties() //AVAILABLE_DEVICE_PROPERTIES[DEVICE_NWB_FILE]
         this._engineClient = engineClient
         engineClient.onDeviceStateUpdated(this.handleDeviceMessage)
     }
