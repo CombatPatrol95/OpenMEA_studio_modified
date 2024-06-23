@@ -164,6 +164,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     private onNewSubsamples = (newSubsamples: number[]) => {
         console.log("newSubsamples" + newSubsamples)
         console.log("_pulseData" + this._pulseData)
+        console.log("rising" + this._rising)
         if (newSubsamples.length >= this._maxSubsamples) {
             // The subsamples were entirely recalculated by the  engine.
             const numToCopy = Math.min(this._maxSubsamples, newSubsamples.length)
@@ -176,7 +177,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
                 const index = i - copyFrom;
                 if(subsample >= this._threshold && this._rising){
                     // this._pulseData.push(this.context.chartConfig.showMaxVolts)
-                    this._pulseData[index] = this.props.context.chartConfig.showMaxVolts //subsample;
+                    this._pulseData[index] = this.chartHeight() //subsample;
                     this._rising = false;
                 }else {
                     //this._pulseData[index] = 0
@@ -196,7 +197,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             for(let i = 0; i < newSubsamples.length; i++){
                 const subsample = newSubsamples[i]
                 if(subsample >= this._threshold && this._rising){
-                    this._pulseData.push(this.props.context.chartConfig.showMaxVolts)  //subsample
+                    this._pulseData.push(this.chartHeight())  //this.props.context.chartConfig.showMaxVolts
                     this._rising = false
                 }else {
                     this._pulseData.push(0)
@@ -210,48 +211,12 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
 
         console.log("newSubsamples" + newSubsamples)
         console.log("_pulseData" + this._pulseData)
+        console.log("rising" + this._rising)
         // Redraw the chart
         if (this._line) {
             this._d3DataPath?.datum(this._pulseData).attr('d', this._line)
         }
 
-        // const pulseHeight = 10; // Adjust this value to change the height of the pulses
-        // const threshold = this.props.threshold;
-        //
-        // let inPulse = false;
-        // let pulseStart = 0;
-        // const pulses = [];
-        //
-        // for (let i = 0; i < this._subsamples.length; i++) {
-        //     const value = this._subsamples[i];
-        //     if (value >= threshold && !inPulse) {
-        //         inPulse = true;
-        //         pulseStart = i;
-        //     } else if (value < threshold && inPulse) {
-        //         inPulse = false;
-        //         const pulseEnd = i;
-        //         pulses.push({
-        //             x: pulseStart,
-        //             y: threshold,
-        //             width: pulseEnd - pulseStart,
-        //             height: pulseHeight,
-        //         });
-        //     }
-        // }
-        //
-        // this._pulseData = pulses;
-        // this._d3DataPath?.data(this._pulseData)
-
-        // Update the _pulseData array based on the new sample
-        // const newSample = this._subsamples[this._subsamples.length - 1];
-        // const threshold = this.props.threshold;
-        // const isAboveThreshold = newSample >= threshold;
-        //
-        // this._pulseData.shift(); // Remove the leftmost value
-        // this._pulseData.push(isAboveThreshold ? 10 : 0); // Append the new value (1 for above threshold, 0 for below)
-
-        // Redraw the pulse data
-        // this.redrawPulseData();
     }
 
     private formatXTick = (d: NumberValue, i: number) : string => {
@@ -272,23 +237,24 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     }
 
     private formatYTick = (d: NumberValue, i: number) : string => {
-        if (i % 2 == 0 || this.props.hideAxes) {
-            return ''
-        }
-
-        const volts = d.valueOf()
-        const chartConfig = this.props.context.chartConfig
-        const range = chartConfig.showMaxVolts - chartConfig.showMinVolts
-
-        if (range >= 1.5) {
-            return d3.format(',.2r')(volts) + ' V'
-        }
-
-        if (range >= 0.0015) {
-            return d3.format(',.2r')(volts * 1000) + ' mV'
-        }
-
-        return d3.format(',.2r')(volts * 1000_000) + ' μV'
+        // if (i % 2 == 0 || this.props.hideAxes) {
+        //     return ''
+        // }
+        //
+        // const volts = d.valueOf()
+        // const chartConfig = this.props.context.chartConfig
+        // const range = chartConfig.showMaxVolts - chartConfig.showMinVolts
+        //
+        // if (range >= 1.5) {
+        //     return d3.format(',.2r')(volts) + ' V'
+        // }
+        //
+        // if (range >= 0.0015) {
+        //     return d3.format(',.2r')(volts * 1000) + ' mV'
+        // }
+        //
+        // return d3.format(',.2r')(volts * 1000_000) + ' μV'
+        return ''
     }
 
     private chartWidth = () => {
@@ -317,7 +283,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
 
     private redrawChart = () => {
         const props = this.props
-        const chartConfig = props.context.chartConfig
+        // const chartConfig = props.context.chartConfig
         const chartWidth = this.chartWidth()
         const chartHeight = this.chartHeight()
         const maxSamples = this._maxSubsamples
@@ -336,8 +302,8 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             .range([leftPadding, leftPadding + chartWidth])
 
         const yRange = [
-            chartConfig.showMinVolts,
-            chartConfig.showMaxVolts
+            0,
+            chartHeight
         ]
         const yScale = d3.scaleLinear().domain(yRange).range([chartHeight, 0])
 
@@ -399,22 +365,6 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
             .datum(this._pulseData)
 
 
-        // this._d3DataPath = svg.append('g')
-        //     .attr("fill", "blue")
-        //     .selectAll()
-        //     .data(this._pulseData)
-        //     .join("rect")
-        //     .attr("class", "pulse")
-        //     .attr("x", (d) => xScale(d.x))
-        //     .attr("y", (d) => yScale(d.y) - 10)    //10 is the pulseHeight
-        //     .attr("width", (d) => xScale(d.width))
-        //     .attr("height", 10)
-
-        // Draw the pulses
-        // const pulseGroup = svg.selectAll(".pulse-group").data([null]);
-        // const pulseGroupEnter = pulseGroup.enter().append("g").attr("class", "pulse-group");
-        //
-        // this.redrawPulseData();
     }
 
     private recalculateChartDimensions = () => {
@@ -440,54 +390,4 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
         this._pulseData = new Array(this._maxSubsamples).fill(0)
     }
 
-    // private redrawPulseData = () => {
-    //     const props = this.props
-    //     const chartConfig = props.context.chartConfig
-    //
-    //     const chartWidth = this.chartWidth()
-    //     const chartHeight = this.chartHeight()
-    //     const maxSamples = this._maxSubsamples
-    //
-    //     const leftPadding = this.leftPadding()
-    //
-    //     const yRange = [
-    //         chartConfig.showMinVolts,
-    //         chartConfig.showMaxVolts
-    //     ]
-    //
-    //
-    //     const xScale = d3.scaleLinear()
-    //         .domain([0, maxSamples])
-    //         .range([leftPadding, leftPadding + chartWidth])
-    //     const yScale = d3.scaleLinear().domain(yRange).range([chartHeight, 0])
-    //
-    //
-    //     const pulseGroup = d3.select(this._svgRef).select(".pulse-group");
-    //
-    //     const pulseRects = pulseGroup
-    //         .selectAll(".pulse")
-    //         .data(this._pulseData)
-    //         .join(
-    //             (enter) =>
-    //                 enter
-    //                     .append("rect")
-    //                     .attr("class", "pulse")
-    //                     .attr("x", (d, i) => xScale(i))
-    //                     .attr("y", () => yScale(this.props.threshold) - this.pulseHeight)
-    //                     .attr("width", xScale.invert(1)) // Set the width to the smallest visible width
-    //                     .attr("height", () => this.pulseHeight)
-    //                     .attr("fill", 'blue'),
-    //             (update) =>
-    //                 update.call((update) =>
-    //                     update
-    //                         .attr("x", (d, i) => xScale(i))
-    //                         .attr("y", () => yScale(this.props.threshold) - this.pulseHeight)
-    //                         .attr("width", xScale.invert(1))
-    //                         .attr("height", (d) => (d === 1 ? this.pulseHeight : 0))
-    //                 ),
-    //             (exit) => exit.remove()
-    //         );
-    //
-    //     pulseGroup.exit().remove();
-    // };
 }
