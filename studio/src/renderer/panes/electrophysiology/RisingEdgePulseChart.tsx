@@ -86,9 +86,12 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
 
         if (oldThreshold !== newThreshold) {
             // Reset _rising when the threshold changes
+            console.log("old threshold" + this._threshold);
+            this._threshold = newThreshold;
             this._rising = true;
-        }
+            console.log("new threshold" + this._threshold);
 
+        }
         if (redrawDataOnly && this._line) {
             // d3.select(this._svgRef)?.data(this._subsamples)
             // this.redrawChart()
@@ -116,7 +119,6 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     private _pulseData : number[] = []
     private _rising : boolean = true
     private _threshold : number = this.props.context.chartConfig.pulseThreshold
-    // private pulseHeight = 10;
 
     private _width = 500
     private _height = 300
@@ -162,9 +164,9 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
     }
 
     private onNewSubsamples = (newSubsamples: number[]) => {
-        console.log("newSubsamples" + newSubsamples)
-        console.log("_pulseData" + this._pulseData)
-        console.log("rising" + this._rising)
+        // console.log("newSubsamples" + newSubsamples)
+        // console.log("_pulseData" + this._pulseData)
+        // console.log("rising" + this._rising)
         if (newSubsamples.length >= this._maxSubsamples) {
             // The subsamples were entirely recalculated by the  engine.
             const numToCopy = Math.min(this._maxSubsamples, newSubsamples.length)
@@ -181,7 +183,7 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
                     this._rising = false;
                 }else {
                     //this._pulseData[index] = 0
-                    if(subsample < this._threshold){
+                    if(subsample < this._threshold * 0.95){
                         this._rising = true;
                     }
                 }
@@ -209,9 +211,9 @@ export class PulseChart extends React.Component<PulseChartProps, PulseChartState
 
         }
 
-        console.log("newSubsamples" + newSubsamples)
-        console.log("_pulseData" + this._pulseData)
-        console.log("rising" + this._rising)
+        // console.log("newSubsamples" + newSubsamples)
+        // console.log("_pulseData" + this._pulseData)
+        // console.log("rising" + this._rising)
         // Redraw the chart
         if (this._line) {
             this._d3DataPath?.datum(this._pulseData).attr('d', this._line)
